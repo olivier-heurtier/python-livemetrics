@@ -11,7 +11,7 @@ master_doc = 'index'
 html_static_path = ['_static']
 html_theme = 'alabaster'
 html_theme_options = {
-    'github_user': 'idemia',
+    'github_user': 'olivier-heurtier',
     'github_repo': 'python-livemetrics',
     'github_button': True,
     'show_relbars': True,

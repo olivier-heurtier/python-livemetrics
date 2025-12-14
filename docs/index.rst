@@ -13,7 +13,7 @@ Release v\ |version|.
 
     .. image:: https://img.shields.io/pypi/l/livemetrics.svg
         :target: https://pypi.org/project/livemetrics/
-        :alt: CeCILL-C
+        :alt: Apache-2.0
 
     .. image:: https://img.shields.io/pypi/pyversions/livemetrics.svg
         :target: https://pypi.org/project/livemetrics/

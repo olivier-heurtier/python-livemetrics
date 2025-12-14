@@ -8,7 +8,7 @@ livemetrics
 
 .. image:: https://img.shields.io/pypi/l/livemetrics.svg
     :target: https://pypi.org/project/livemetrics/
-    :alt: CeCILL-C
+    :alt: Apache-2.0
 
 .. image:: https://img.shields.io/pypi/v/livemetrics.svg
     :target: https://pypi.org/project/livemetrics/
@@ -18,12 +18,12 @@ livemetrics
     :target: https://pypi.org/project/livemetrics/
     :alt: Python 3.x
 
-.. image:: https://github.com/idemia/python-livemetrics/actions/workflows/tests.yml/badge.svg
-    :target: https://github.com/idemia/python-livemetrics/actions/workflows/tests.yml
+.. image:: https://github.com/olivier-heurtier/python-livemetrics/actions/workflows/tests.yml/badge.svg
+    :target: https://github.com/olivier-heurtier/python-livemetrics/actions/workflows/tests.yml
     :alt: Github action
 
-.. image:: https://codecov.io/gh/idemia/python-livemetrics/branch/master/graph/badge.svg
-    :target: https://codecov.io/gh/idemia/python-livemetrics
+.. image:: https://codecov.io/gh/olivier-heurtier/python-livemetrics/branch/master/graph/badge.svg
+    :target: https://codecov.io/gh/olivier-heurtier/python-livemetrics
     :alt: Code Coverage Status (Codecov)
 
 A Python library for building and publishing live business metrics used to have insights
