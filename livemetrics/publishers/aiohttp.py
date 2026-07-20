@@ -185,6 +185,19 @@ class Handler:
     async def get_histograms0(self,request):
         return self._get_histograms(request,None,None)
 
+    async def get_openmetrics(self,request):
+        is_ready = self.LM.is_ready()
+        if asyncio.iscoroutine(is_ready):
+            is_ready = await is_ready
+        is_healthy = self.LM.is_healthy()
+        if asyncio.iscoroutine(is_healthy):
+            is_healthy = await is_healthy
+        s = self.LM.get_openmetrics(is_ready,is_healthy)
+        return web.Response(status=200,
+            content_type='application/openmetrics-text; version=1.0.0',
+            headers={"Content-Length": str(len(s)), "Access-Control-Allow-Origin": "*"},
+            body=s)
+
 def routes(LM):
     """
     Return a list of routes to be registered in the :py:mod:`aiohttp` application.
@@ -210,5 +223,7 @@ def routes(LM):
         web.get('/monitoring/v1/metrics/histograms/{event}/{metric}', handler.get_histograms2),
         web.get('/monitoring/v1/metrics/histograms/{event}', handler.get_histograms1),
         web.get('/monitoring/v1/metrics/histograms', handler.get_histograms0),
+
+        web.get('/metrics', handler.get_openmetrics),
     ]
 

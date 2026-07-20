@@ -185,6 +185,14 @@ class Histograms0(View):
     def get(self,request):
         return _get_histograms(self.LM,request,None,None)
 
+class OpenMetrics(View):
+    LM =  None
+    def get(self,request):
+        data = self.LM.get_openmetrics(self.LM.is_ready(), self.LM.is_healthy())
+        resp = HttpResponse(data,content_type='application/openmetrics-text; version=1.0.0')
+        resp["Access-Control-Allow-Origin"] = "*"
+        return resp
+
 def urlpatterns(LM):
     """
     Return a list of Django paths to be registered in the application.
@@ -209,5 +217,7 @@ def urlpatterns(LM):
         path('monitoring/v1/metrics/histograms/<event>/<metric>', Histograms2.as_view(LM=LM),name='monitoring-histograms2'),
         path('monitoring/v1/metrics/histograms/<event>', Histograms1.as_view(LM=LM),name='monitoring-histograms1'),
         path('monitoring/v1/metrics/histograms', Histograms0.as_view(LM=LM),name='monitoring-histograms0'),
+
+        path('metrics', OpenMetrics.as_view(LM=LM),name='openmetrics'),
     ]
     return urlpatterns

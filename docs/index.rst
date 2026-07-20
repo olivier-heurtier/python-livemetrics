@@ -62,3 +62,10 @@ API
 .. toctree::
 
     modules
+
+Annexes
+-------
+
+.. toctree::
+
+    openmetrics

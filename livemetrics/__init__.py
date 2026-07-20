@@ -159,6 +159,7 @@ True
 
 import os
 import time
+import json
 import collections
 from functools import wraps
 import asyncio
@@ -497,3 +498,51 @@ class LiveMetrics(object):
             data = D
         return data
 
+    #
+    # OpenMetrics data
+    #
+    def get_openmetrics(self,is_ready,is_healthy):
+        # Get the data using OpenMetrics 1.0 format
+        s = []
+
+        # about + version
+        info = {}
+        info['name'] = self.about
+        ver = self.version
+        try:
+            info.update(json.loads(ver))
+        except:
+            info['version'] = ver
+        s.append("# TYPE about info")
+        s.append("about_info{"+",".join("%s=\"%s\"" % (k,str(v)) for k,v in info.items())+"} 1")
+
+        # is_ready and is_healty
+        s.append("# TYPE is_ready stateset")
+        s.append('is_ready{is_ready="is_ready"} ' + '1' if is_ready else '0')
+        s.append('# TYPE is_healthy stateset')
+        s.append('is_healthy{is_healthy="is_healthy"} ' + '1' if is_healthy else '0')
+
+        # Gauges -> gauge
+        for obj, g in self._gauges.items():
+            s.append(f"# TYPE {obj} gauge")
+            s.append(f"{obj} {g.count}")
+
+        # Meters -> counter
+        for event, d in self._meters.items():
+            for result, m in d.items():
+                s.append(f"# TYPE {event}_{result}_total counter")
+                s.append(f"{event}_{result}_total {m.count}")
+
+        # Histogram
+        percentiles=[0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95]
+        for event, h in self._histograms.items():
+            s.append(f"# TYPE {event} histogram")
+            snapshot = h.snapshot
+            for p in percentiles:
+                val = snapshot.get_value(p)
+                s.append(f'{event}_bucket{{le="{p}"}} {val:.3e}')
+            val = snapshot.get_value(1.0)
+            s.append(f'{event}_bucket{{le="+Inf"}} {val:.3e}')
+            s.append(f"{event}_count {h.count}")
+
+        return '\n'.join(s)

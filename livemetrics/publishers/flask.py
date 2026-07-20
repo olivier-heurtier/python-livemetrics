@@ -172,6 +172,14 @@ class Handler:
     def get_histograms0(self):
         return self._get_histograms(None,None)
 
+    async def get_openmetrics(self):
+        s = self.LM.get_openmetrics(self.LM.is_ready(), self.LM.is_healthy())
+        resp = make_response(s, 200)
+        resp.headers['Content-Length'] = str(len(s))
+        resp.headers['Content-Type'] = 'application/openmetrics-text; version=1.0.0'
+        resp.headers['Access-Control-Allow-Origin'] = '*'
+        return resp
+
 def blueprint(LM):
     """
     Return a blueprint with the routes and view_func for the publication of the metrics.
@@ -197,6 +205,8 @@ def blueprint(LM):
     blueprint.add_url_rule('/monitoring/v1/metrics/histograms/<event>/<metric>',view_func=handler.get_histograms2)
     blueprint.add_url_rule('/monitoring/v1/metrics/histograms/<event>',view_func=handler.get_histograms1)
     blueprint.add_url_rule('/monitoring/v1/metrics/histograms',view_func=handler.get_histograms0)
+
+    blueprint.add_url_rule('/metrics',view_func=handler.get_openmetrics)
 
     return blueprint
 
