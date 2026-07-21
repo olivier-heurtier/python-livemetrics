@@ -21,7 +21,7 @@ jobs:
     - name: Run pytest
       run: |
         python -m pip install tox
-        python -m tox --skip-env clean,docs,py-flask3-django60,report
+        python -m tox -e py-flask3-django42,py-flask3-django52
 
   build_all:
     strategy:
