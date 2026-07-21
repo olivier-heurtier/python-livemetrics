@@ -166,7 +166,7 @@ import asyncio
 
 from livemetrics.metrics import *
 
-__version__ = '0.9'
+__version__ = '0.10a'
 __author__ = "Olivier Heurtier"
 __copyright__ = "Olivier Heurtier"
 __license__ = "Apache-2.0"
