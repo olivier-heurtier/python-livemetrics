@@ -6,8 +6,9 @@ Release History
 ----------------
 
 - Add a /metrics endpoint to publish OpenMetrics data
-- Django 6.0.x
+- Add Django 6.0.x, drop Django 4.2.x
 - Adjust coverage to include all tests
+- Change of licence
 
 0.8 (2025-11-01)
 ----------------
