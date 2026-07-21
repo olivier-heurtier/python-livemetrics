@@ -174,8 +174,11 @@ class HTTPRequestHandler(http.server.BaseHTTPRequestHandler):
             self.wfile.write(data.encode('ascii'))
         elif self.path=='/metrics':
             data = self.LM.get_openmetrics(self.LM.is_ready(), self.LM.is_healthy())
+            ct = 'application/openmetrics-text; version=1.0.0'
+            if 'text' in self.headers['Accept']:
+                ct = 'text/plain'
             self.send_response(200)
-            self.send_header("Content-Type","application/openmetrics-text; version=1.0.0")
+            self.send_header("Content-Type",ct)
             self.send_header("Access-Control-Allow-Origin","*")
             self.send_header("Content-Length", str(len(data)))
             self.end_headers()

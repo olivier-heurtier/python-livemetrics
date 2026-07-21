@@ -189,7 +189,10 @@ class OpenMetrics(View):
     LM =  None
     def get(self,request):
         data = self.LM.get_openmetrics(self.LM.is_ready(), self.LM.is_healthy())
-        resp = HttpResponse(data,content_type='application/openmetrics-text; version=1.0.0')
+        ct = 'application/openmetrics-text; version=1.0.0'
+        if 'text' in request.headers['Accept']:
+            ct = 'text/plain'
+        resp = HttpResponse(data,content_type=ct)
         resp["Access-Control-Allow-Origin"] = "*"
         return resp
 

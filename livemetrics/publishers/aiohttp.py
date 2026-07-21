@@ -193,8 +193,11 @@ class Handler:
         if asyncio.iscoroutine(is_healthy):
             is_healthy = await is_healthy
         s = self.LM.get_openmetrics(is_ready,is_healthy)
+        ct = 'application/openmetrics-text; version=1.0.0'
+        if 'text' in request.headers['Accept']:
+            ct = 'text/plain'
         return web.Response(status=200,
-            content_type='application/openmetrics-text; version=1.0.0',
+            content_type=ct,
             headers={"Content-Length": str(len(s)), "Access-Control-Allow-Origin": "*"},
             body=s)
 

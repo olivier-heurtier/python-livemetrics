@@ -92,12 +92,13 @@ class TestPublisher(unittest.TestCase):
         # Test OpenMetrics interfaces
         with requests.get('http://'+IP+':'+PORT+'/metrics') as r:
             self.assertEqual(200,r.status_code)
-            assert r.content.startswith(b"""# TYPE about info
+            assert r.content.startswith(b"""# TYPE about gauge
+about 0
 about_info{name="Test server",version="1.0"} 1
-# TYPE is_ready stateset
-is_ready{is_ready="is_ready"} 1
-# TYPE is_healthy stateset
-is_healthy{is_healthy="is_healthy"} 1""")
+# TYPE is_ready gauge
+is_ready 1
+# TYPE is_healthy gauge
+is_healthy 1""")
             assert b"test_ok_total 5" in r.content
 
         # Test with a bad status

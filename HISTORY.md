@@ -2,6 +2,13 @@
 Release History
 ===============
 
+0.9 (2026-07-21)
+----------------
+
+- Add a /metrics endpoint to publish OpenMetrics data
+- Django 6.0.x
+- Adjust coverage to include all tests
+
 0.8 (2025-11-01)
 ----------------
 

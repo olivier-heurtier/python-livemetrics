@@ -174,9 +174,12 @@ class Handler:
 
     async def get_openmetrics(self):
         s = self.LM.get_openmetrics(self.LM.is_ready(), self.LM.is_healthy())
+        ct = 'application/openmetrics-text; version=1.0.0'
+        if 'text' in request.headers['Accept']:
+            ct = 'text/plain'
         resp = make_response(s, 200)
         resp.headers['Content-Length'] = str(len(s))
-        resp.headers['Content-Type'] = 'application/openmetrics-text; version=1.0.0'
+        resp.headers['Content-Type'] = ct
         resp.headers['Access-Control-Allow-Origin'] = '*'
         return resp
 

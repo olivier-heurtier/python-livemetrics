@@ -323,6 +323,8 @@ class LiveMetrics(object):
             will be decorated and not the actual function.
         """
 
+        # pre-declare a first histogram
+        self._histograms.setdefault(event, Histogram())
         def _f(f,event=event,ok=ok,error=error):
             @wraps(f)
             async def __asyncf(*args,**kw):
@@ -503,9 +505,13 @@ class LiveMetrics(object):
     #
     def get_openmetrics(self,is_ready,is_healthy):
         # Get the data using OpenMetrics 1.0 format
+        # See https://opentelemetry.io/docs/specs/otel/compatibility/prometheus_and_openmetrics/
+        # for compatibility issues
         s = []
 
         # about + version
+        # Prometheus is not supporting "info":
+        # "Prometheus Gauge with an additional _info name suffix MUST be produced"
         info = {}
         info['name'] = self.about
         ver = self.version
@@ -513,14 +519,18 @@ class LiveMetrics(object):
             info.update(json.loads(ver))
         except:
             info['version'] = ver
-        s.append("# TYPE about info")
+        
+        s.append("# TYPE about gauge")
+        s.append("about 0")
         s.append("about_info{"+",".join("%s=\"%s\"" % (k,str(v)) for k,v in info.items())+"} 1")
 
         # is_ready and is_healty
-        s.append("# TYPE is_ready stateset")
-        s.append('is_ready{is_ready="is_ready"} ' + '1' if is_ready else '0')
-        s.append('# TYPE is_healthy stateset')
-        s.append('is_healthy{is_healthy="is_healthy"} ' + '1' if is_healthy else '0')
+        # Prometheus is not supporting "stateset":
+        # "a Prometheus Gauge MUST be produced"
+        s.append("# TYPE is_ready gauge")
+        s.append('is_ready ' + '1' if is_ready else '0')
+        s.append('# TYPE is_healthy gauge')
+        s.append('is_healthy ' + '1' if is_healthy else '0')
 
         # Gauges -> gauge
         for obj, g in self._gauges.items():
